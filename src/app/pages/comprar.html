@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprar Ahora - Japanese Food</title>
+    <link rel="stylesheet" href="../css/comprar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">JAPANESE FOOD</div>
+        <nav>
+            <a href="inicio.html" class="nav-item">INICIO</a>
+            <a href="menu.html" class="nav-item">MENU</a>
+            <a href="comprar.html" class="nav-item active">COMPRA AHORA</a>
+            <a href="finalizar.html" class="nav-item">Finalizar compra</a>
+        </nav>
+    </header>
+
+    <section class="buy-now-page">
+        <h2 class="page-title">Ordenar Ahora</h2>
+        
+        <div class="content-wrapper">
+            
+            <div class="product-list">
+                <h3 class="list-heading">Selecciona tus Platos Favoritos</h3>
+                
+                                <div class="product-card gradient-1">
+                    <img src="ramen.jpg" alt="Ramen Clásico" class="product-image">
+                    <div class="card-details">
+                        <p class="product-name">Ramen Clásico</p>
+                        <p class="product-description">Caldo de cerdo, fideos, huevo, alga y cebollín.</p>
+                        <div class="price-action">
+                            <span class="product-price">$7.50</span>
+                        <button class="add-to-cart-btn" data-name="Ramen Clásico" data-price="7.50">Añadir</button>
+                        </div>
+                  </div>
+                </div>
+
+                <div class="product-card gradient-2">
+                    <img src="sushiroll.jpg" alt="Sushi Roll" class="product-image">
+                    <div class="card-details">
+                        <p class="product-name">Sushi Roll</p>
+                        <p class="product-description">Rollo de arroz, salmón, aguacate y queso crema.</p>
+                        <div class="price-action">
+                            <span class="product-price">$6.00</span>
+                            <button class="add-to-cart-btn" data-name="Sushi Roll" data-price="6.00">Añadir</button>
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+            
+            <div class="cart-summary-panel">
+                <h3 class="list-heading cart-heading">Tu Carrito</h3>
+                
+                                <div class="cart-items-container">
+                                    </div>
+                
+                <hr class="summary-divider">
+
+                                <div class="order-summary">
+                                    </div>
+
+                <button class="checkout-btn">FINALIZAR PEDIDO</button>
+               
+            </div>
+            
+        </div>
+    </section>
+
+    <div class="bottom-gradient"></div>
+
+<script>
+    // Función para obtener el carrito de LocalStorage
+    function getCart() {
+        const cartString = localStorage.getItem('japaneseFoodCart');
+        return cartString ? JSON.parse(cartString) : [];
+    }
+
+    // Función para guardar el carrito (necesario para manejar cambios de cantidad o eliminación)
+    function saveCart(cart) {
+        localStorage.setItem('japaneseFoodCart', JSON.stringify(cart));
+        renderCart(); // Vuelve a renderizar después de guardar
+    }
+
+    // Función para calcular el subtotal, el envío y el total
+    function calculateTotals(cart) {
+        // Redondeamos a 2 decimales para evitar problemas de coma flotante
+        const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2);
+        const shipping = 3.00; // Envío fijo, basado en tu ejemplo estático
+        const total = (parseFloat(subtotal) + shipping).toFixed(2);
+        return { subtotal, shipping, total };
+    }
+
+    // Función principal para dibujar el carrito en el HTML
+    function renderCart() {
+        const cart = getCart();
+        const cartContainer = document.querySelector('.cart-items-container');
+        const summaryDiv = document.querySelector('.order-summary');
+        const checkoutBtn = document.querySelector('.checkout-btn');
+        const divider = document.querySelector('.summary-divider');
+        
+        // Limpiar contenido anterior
+        cartContainer.innerHTML = '';
+        summaryDiv.innerHTML = '';
+
+        if (cart.length === 0) {
+            cartContainer.innerHTML = '<p style="padding: 20px; text-align: center;">Tu carrito está vacío. ¡Añade platos!</p>';
+            checkoutBtn.style.display = 'none';
+            divider.style.display = 'none';
+        } else {
+            // 1. DIBUJAR ARTÍCULOS
+            cart.forEach(item => {
+                const itemTotal = (item.price * item.quantity).toFixed(2);
+                
+                const itemHTML = `
+                    <div class="cart-item">
+                        <span class="item-name">${item.name}</span>
+                        <div class="item-quantity-control">
+                            <input type="number" value="${item.quantity}" min="1" class="quantity-input" data-name="${item.name}">
+                            <span class="item-total">$${itemTotal}</span>
+                            <button class="remove-btn" data-name="${item.name}">✕</button>
+                        </div>
+                    </div>
+                `;
+                cartContainer.insertAdjacentHTML('beforeend', itemHTML);
+            });
+
+            // 2. DIBUJAR RESUMEN
+            const totals = calculateTotals(cart);
+
+            summaryDiv.innerHTML = `
+                <div class="summary-line">
+                    <span>Subtotal:</span>
+                    <span>$${totals.subtotal}</span>
+                </div>
+                <div class="summary-line">
+                    <span>Envío (Estandar):</span>
+                    <span>$${totals.shipping.toFixed(2)}</span>
+                </div>
+                <div class="summary-line total-line">
+                    <span>Total a Pagar:</span>
+                    <span>$${totals.total}</span>
+                </div>
+            `;
+            checkoutBtn.style.display = 'block';
+            divider.style.display = 'block';
+        }
+
+        // 3. AGREGAR MANEJADORES DE EVENTOS
+        addCartEventListeners();
+        addAddButtonListeners();
+    }
+
+    // Manejar cambios de cantidad y eliminación
+    function addCartEventListeners() {
+        // Evento para cambiar la cantidad
+        document.querySelectorAll('.quantity-input').forEach(input => {
+            input.onchange = (e) => {
+                const name = e.target.dataset.name;
+                const newQuantity = parseInt(e.target.value);
+                
+                let cart = getCart();
+                const item = cart.find(i => i.name === name);
+                
+                if (item && newQuantity > 0) {
+                    item.quantity = newQuantity;
+                    saveCart(cart);
+                } else if (newQuantity <= 0) {
+                    // Si la cantidad es 0 o menos, elimínalo
+                    cart = cart.filter(i => i.name !== name);
+                    saveCart(cart);
+                }
+            };
+        });
+
+        // Evento para eliminar un artículo
+        document.querySelectorAll('.remove-btn').forEach(button => {
+            button.onclick = (e) => {
+                const name = e.target.dataset.name;
+                let cart = getCart();
+                
+                // Filtra el carrito para mantener solo los ítems que NO son el ítem a eliminar
+                cart = cart.filter(item => item.name !== name);
+                saveCart(cart);
+            };
+        });
+    }
+
+    // Manejar el botón "Añadir" en la página Comprar Ahora
+    function addAddButtonListeners() {
+        document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+            button.onclick = (e) => {
+                const name = e.target.dataset.name;
+                const price = e.target.dataset.price;
+                
+                let cart = getCart();
+                const existingItem = cart.find(item => item.name === name);
+
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({
+                        name: name,
+                        price: parseFloat(price),
+                        quantity: 1
+                    });
+                }
+
+                saveCart(cart);
+            };
+        });
+    }
+
+    // Inicializar el carrito al cargar la página
+    document.addEventListener('DOMContentLoaded', renderCart);
+</script>
+    
+</body>
+</html>

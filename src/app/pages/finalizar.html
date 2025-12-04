@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalizar Pedido - Japanese Food</title>
+    <link rel="stylesheet" href="../css/finalizar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">JAPANESE FOOD</div>
+        <nav>
+            <a href="inicio.html" class="nav-item">INICIO</a>
+            <a href="menu.html" class="nav-item">MENU</a>
+            <a href="comprar.html" class="nav-item">COMPRA AHORA</a>
+            <a class="active" href="finalizar.html" class="nav-item">finalizar compra</a>
+        </nav>
+    </header>
+
+    <main class="checkout-page">
+        <h2 class="page-title">Finalizar Compra 🚀</h2>
+
+        <div class="checkout-wrapper">
+            
+            <div class="summary-section">
+                <h3 class="section-heading">Resumen del Pedido</h3>
+                
+                <div class="order-details-list">
+                    </div>
+                
+                <hr class="summary-divider">
+
+                <div class="final-totals-container">
+                    <div class="total-line subtotal-line">
+                        <span>Subtotal:</span>
+                        <span id="subtotalValue">$0.00</span>
+                    </div>
+                    <div class="total-line shipping-line">
+                        <span>Envío Estándar:</span>
+                        <span id="shippingValue">$3.00</span>
+                    </div>
+                    <div class="total-line final-total-line">
+                        <strong>Total a Pagar:</strong>
+                        <strong id="finalTotalValue">$0.00</strong>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="payment-section">
+                <h3 class="section-heading">Selecciona Método de Pago</h3>
+                
+                <div class="payment-methods-grid">
+
+                    <label class="payment-card" for="pago-tarjeta">
+                        <input type="radio" id="pago-tarjeta" name="payment-method" value="tarjeta" checked>
+                        <i class="fa-solid fa-credit-card"></i>
+                        <h4>Tarjeta de Crédito / Débito</h4>
+                        <p>Paga de forma segura en línea.</p>
+                        <div class="card-icons">
+                            <i class="fab fa-cc-visa"></i>
+                            <i class="fab fa-cc-mastercard"></i>
+                        </div>
+                    </label>
+
+                    <label class="payment-card" for="pago-transferencia">
+                        <input type="radio" id="pago-transferencia" name="payment-method" value="transferencia">
+                        <i class="fa-solid fa-bank"></i>
+                        <h4>Transferencia Bancaria</h4>
+                        <p>Recibirás los detalles de la cuenta.</p>
+                    </label>
+
+                    <label class="payment-card" for="pago-efectivo">
+                        <input type="radio" id="pago-efectivo" name="payment-method" value="efectivo">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                        <h4>Efectivo (Contraentrega)</h4>
+                        <p>Paga en el momento de la entrega.</p>
+                    </label>
+                </div>
+                
+                <div class="payment-info-box" id="paymentInfoBox">
+                    <p>Por favor, selecciona un método de pago para continuar.</p>
+                </div>
+                
+                <button class="confirm-order-btn">CONFIRMAR PEDIDO</button>
+
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Funciones básicas para el carrito (copiadas de comprar.html)
+        function getCart() {
+            const cartString = localStorage.getItem('japaneseFoodCart');
+            return cartString ? JSON.parse(cartString) : [];
+        }
+
+        function calculateTotals(cart) {
+            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2);
+            const shipping = 3.00; 
+            const total = (parseFloat(subtotal) + shipping).toFixed(2);
+            return { subtotal, shipping, total };
+        }
+
+        // --- LÓGICA DE LA PÁGINA DE FINALIZAR COMPRA ---
+
+        // Mapeo de información por método de pago
+        const paymentDetails = {
+            'tarjeta': {
+                heading: "Pago Seguro con Tarjeta",
+                content: "Serás redirigido a nuestra pasarela de pago segura para ingresar los detalles de tu tarjeta de crédito o débito. ¡Tus datos están protegidos!",
+                color: "#ff4d6d"
+            },
+            'transferencia': {
+                heading: "Detalles de Transferencia Bancaria",
+                content: `
+                    <p>Por favor, realiza la transferencia a los siguientes datos:</p>
+                    <ul>
+                        <li><strong>Banco:</strong> Banco central</li>
+                        <li><strong>Cuenta No:</strong> 1234 5678 9012</li>
+                        <li><strong>Titular:</strong> Japanese Food inc.</li>
+                    </ul>
+                    <small>Tu pedido será procesado una vez confirmado el pago.</small>
+                `,
+                color: "#ff9a3c"
+            },
+            'efectivo': {
+                heading: "Pago en Efectivo (Contraentrega)",
+                content: "Ten listo el monto exacto de tu pedido para pagar al repartidor al momento de la entrega. ¡Aceptamos solo billetes y monedas en buen estado!",
+                color: "#845ec2"
+            }
+        };
+
+
+        function renderSummary() {
+            const cart = getCart();
+            const totals = calculateTotals(cart);
+            const detailList = document.querySelector('.order-details-list');
+            
+            // 1. DIBUJAR ARTÍCULOS DETALLADOS
+            detailList.innerHTML = '';
+            if (cart.length === 0) {
+                 detailList.innerHTML = '<p style="text-align: center; color: #777;">Tu carrito está vacío. Redirigiendo a Menú...</p>';
+                 // Opcional: Redirigir si el carrito está vacío
+                 // setTimeout(() => { window.location.href = 'menu.html'; }, 3000);
+                 return;
+            }
+
+            cart.forEach(item => {
+                const itemTotal = (item.price * item.quantity).toFixed(2);
+                const itemHTML = `
+                    <div class="detail-item">
+                        <span class="item-name">${item.quantity}x ${item.name}</span>
+                        <span class="item-price">$${itemTotal}</span>
+                    </div>
+                `;
+                detailList.insertAdjacentHTML('beforeend', itemHTML);
+            });
+
+            // 2. DIBUJAR TOTALES FINALES
+            document.getElementById('subtotalValue').textContent = `$${totals.subtotal}`;
+            document.getElementById('shippingValue').textContent = `$${totals.shipping.toFixed(2)}`;
+            document.getElementById('finalTotalValue').textContent = `$${totals.total}`;
+
+            // 3. ACTUALIZAR TEXTO DEL BOTÓN
+            document.querySelector('.confirm-order-btn').textContent = `Pagar $${totals.total}`;
+        }
+
+        function handlePaymentSelection(method) {
+            const details = paymentDetails[method];
+            const infoBox = document.getElementById('paymentInfoBox');
+
+            infoBox.innerHTML = `
+                <h4 style="color: ${details.color};">${details.heading}</h4>
+                ${details.content}
+            `;
+            // Aplica un efecto visual al info box
+            infoBox.classList.remove('active');
+            void infoBox.offsetWidth; // Trigger reflow
+            infoBox.classList.add('active');
+        }
+
+        function setupEventListeners() {
+            // Manejar la selección del método de pago
+            document.querySelectorAll('input[name="payment-method"]').forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    handlePaymentSelection(e.target.value);
+                });
+            });
+
+            // Manejar el botón de confirmar pedido
+            document.querySelector('.confirm-order-btn').addEventListener('click', () => {
+                const selectedMethod = document.querySelector('input[name="payment-method"]:checked').value;
+                alert(`Has seleccionado pagar con ${selectedMethod}. ¡Gracias por tu pedido!`);
+                
+                // Opcional: Limpiar el carrito después de la compra (simulación)
+                // localStorage.removeItem('japaneseFoodCart');
+                // window.location.href = 'inicio.html';
+            });
+
+            // Inicializar con el método de pago por defecto (tarjeta)
+            handlePaymentSelection('tarjeta');
+        }
+
+
+        // Inicializar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSummary();
+            setupEventListeners();
+        });
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,300 @@
+/* Variables de Colores y Tipografía */
+:root {
+    --color-primary: #f26f3b; /* Naranja Coral */
+    --color-title: #f26f3b;
+    --color-text-dark: #333;
+    --color-text-light: #fff;
+    --color-bg-light: #fff;
+    --color-gradient-start: #ffeadf; 
+    --color-gradient-end: #fce8f4; 
+    --card-gradient-1: linear-gradient(135deg, #ff4c4c, #c90069); /* Rojo/Fucsia - Ramen */
+    --card-gradient-2: linear-gradient(135deg, #ff8c42, #ff416c); /* Naranja/Rosa - Sushi */
+    --card-gradient-3: linear-gradient(135deg, #d33cff, #8000ff); /* Púrpura - Dumplings */
+}
+
+/* Estilos Generales y Tipografía */
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-bg-light);
+    color: var(--color-text-dark);
+}
+
+.page-title, .logo, .list-heading {
+    font-family: 'Playfair Display', serif;
+    color: var(--color-title);
+    text-align: center;
+}
+
+/* Estilos del NavBar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 50px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.logo {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: var(--color-text-dark);
+}
+
+.nav-item {
+    text-decoration: none;
+    color: var(--color-text-dark);
+    margin-left: 30px;
+    font-weight: 600;
+    padding: 8px 15px;
+    border-radius: 5px;
+}
+
+.nav-item.active {
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+}
+
+/* Estilos de la Página de Compra */
+.buy-now-page {
+    padding: 50px 20px;
+    background: linear-gradient(to bottom, var(--color-gradient-start), var(--color-bg-light) 30%); /* Degradado superior */
+}
+
+.page-title {
+    font-size: 2.8em;
+    margin-bottom: 40px;
+}
+
+.content-wrapper {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 40px;
+}
+
+/* ---------------------------------- */
+/* COLUMNA IZQUIERDA: PRODUCTOS */
+/* ---------------------------------- */
+.product-list {
+    flex: 2; /* Ocupa más espacio que el carrito */
+}
+
+.list-heading {
+    font-size: 1.8em;
+    text-align: left;
+    margin-bottom: 25px;
+    color: var(--color-text-dark);
+}
+
+.product-card {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 15px;
+    color: var(--color-text-light);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Aplicando degradados de tus tarjetas de menú */
+.gradient-1 { background: var(--card-gradient-1); }
+.gradient-2 { background: var(--card-gradient-2); }
+/* Agrega gradient-3, etc. para más productos */
+
+.product-image {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-right: 15px;
+}
+
+.card-details {
+    flex-grow: 1;
+}
+
+.product-name {
+    font-weight: 700;
+    font-size: 1.3em;
+    margin: 0 0 5px 0;
+}
+
+.product-description {
+    font-size: 0.9em;
+    margin: 0 0 10px 0;
+    opacity: 0.9;
+}
+
+.price-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.product-price {
+    font-weight: 700;
+    font-size: 1.2em;
+}
+
+.add-to-cart-btn {
+    padding: 8px 20px;
+    background-color: #fff;
+    color: var(--color-primary);
+    border: none;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #eee;
+}
+
+/* ---------------------------------- */
+/* COLUMNA DERECHA: CARRITO */
+/* ---------------------------------- */
+.cart-summary-panel {
+    flex: 1; /* Ocupa menos espacio */
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    padding: 25px;
+    height: fit-content; /* Se ajusta al contenido */
+    position: sticky;
+    top: 20px;
+}
+
+.cart-heading {
+    font-size: 1.5em;
+    text-align: center;
+    color: var(--color-text-dark);
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.cart-items-container {
+    padding: 15px 0;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.cart-item:last-of-type {
+    border-bottom: none;
+}
+
+.item-name {
+    font-size: 1em;
+    font-weight: 600;
+    color: var(--color-text-dark);
+}
+
+.item-quantity-control {
+    display: flex;
+    align-items: center;
+}
+
+.quantity-input {
+    width: 35px;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+    font-size: 0.9em;
+}
+
+.item-total {
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-right: 10px;
+    min-width: 40px; /* Asegura espacio para el precio */
+    text-align: right;
+}
+
+.remove-btn {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: color 0.3s;
+}
+
+.remove-btn:hover {
+    color: red;
+}
+
+/* Resumen del Pedido */
+.summary-divider {
+    border: 0;
+    height: 1px;
+    background-color: #eee;
+    margin: 15px 0;
+}
+
+.order-summary {
+    margin-bottom: 25px;
+}
+
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 1em;
+}
+
+.total-line {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: var(--color-primary);
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+/* Botón de Pagar Principal */
+.checkout-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(242, 111, 59, 0.4);
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.checkout-btn:hover {
+    background-color: #e06535; 
+    transform: translateY(-1px);
+}
+
+/* Degradado de Fondo Inferior */
+.bottom-gradient {
+    height: 50px;
+    background: linear-gradient(to top, var(--color-gradient-end), var(--color-gradient-start));
+}
+
+/* Media Queries para Responsividad (Móviles) */
+@media (max-width: 768px) {
+    .content-wrapper {
+        flex-direction: column;
+    }
+
+    .cart-summary-panel {
+        position: relative; /* Desactiva sticky en móviles */
+        margin-top: 40px;
+    }
+}

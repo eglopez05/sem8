@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Japanese Food</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="../css/menu.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+      <div class="logo">JAPANESE FOOD</div>
+
+      <ul class="menu-nav">
+          <li><a href="inicio.html">INICIO</a></li>
+          <li><a class="active" href="#menu">MENU</a></li>
+          <li><a href="comprar.html">COMPRA AHORA</a></li>
+          <li><a href="finalizar.html">Finalizar compra</a></li>
+      </ul>
+  </nav>
+</header>
+
+
+
+<section id="menu" class="menu-section">
+
+  <h2 class="menu-title">🍜 Nuestro Menú</h2>
+
+  <div class="menu-grid">
+
+      <article class="menu-card">
+          <img src="ramen.jpg">
+          <h3>Ramen Clásico</h3>
+          <p>Caldo de cerdo, fideos, huevo, algas y cebollín.</p>
+          <span>$7.50</span>
+      </article>
+
+      <article class="menu-card">
+          <img src="sushiroll.jpg">
+          <h3>Sushi Roll</h3>
+          <p>Rollo de arroz, salmón, aguacate y queso crema.</p>
+          <span>$6.00</span>
+      </article>
+
+      <article class="menu-card">
+          <img src="dumplings.jpg">
+          <h3>Dumplings</h3>
+          <p>Empanadillas al vapor rellenas de carne y verduras.</p>
+          <span>$4.00</span>
+      </article>
+
+      <article class="menu-card">
+          <img src="tempura.jpg">
+          <h3>Tempura</h3>
+          <p>Camarones y vegetales fritos en masa ligera.</p>
+          <span>$5.50</span>
+      </article>
+
+      <article class="menu-card">
+          <img src="onigiri.jpg">
+          <h3>Onigiri</h3>
+          <p>Bolas de arroz rellenas de atún o salmón.</p>
+          <span>$3.50</span>
+      </article>
+
+      <article class="menu-card">
+          <img src="mochi.jpg">
+          <h3>Mochi</h3>
+          <p>Postre japonés de arroz relleno de dulce.</p>
+          <span>$3.00</span>
+      </article>
+
+      <article class="menu-card">
+          <img src="coca.jpg">
+          <h3>Coca Cola</h3>
+          <p>Gaseosa azucarada pidela fria o al ambiente</p>
+          <span>$1.00</span>
+      </article>
+
+  </div>
+</section>
+
+</main>
+
+<script>
+    // Función para obtener todos los productos que están en el carrito
+    function getCart() {
+        const cartString = localStorage.getItem('japaneseFoodCart');
+        return cartString ? JSON.parse(cartString) : [];
+    }
+
+    // Función para guardar el carrito actualizado en localStorage
+    function saveCart(cart) {
+        localStorage.setItem('japaneseFoodCart', JSON.stringify(cart));
+    }
+
+    // Función principal para añadir un plato al carrito
+    function addToCart(name, price) {
+        let cart = getCart();
+        
+        // Buscar si el producto ya existe
+        const existingItem = cart.find(item => item.name === name);
+
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            const priceValue = parseFloat(price.replace('$', '')); 
+            cart.push({
+                name: name,
+                price: priceValue,
+                quantity: 1
+            });
+        }
+
+        saveCart(cart);
+        
+        // Notificación para el usuario
+        alert(`"${name}" añadido al carrito. Puedes ir a COMPRA AHORA para finalizar tu pedido.`);
+    }
+
+    // Asignar el evento a cada tarjeta de menú
+    document.addEventListener('DOMContentLoaded', () => {
+        const menuCards = document.querySelectorAll('.menu-card');
+
+        menuCards.forEach(card => {
+            // [CORRECCIÓN] Eliminamos la manipulación directa del estilo, ya que está en el CSS
+            // card.style.cursor = 'pointer'; 
+            
+            card.addEventListener('click', () => {
+                const name = card.querySelector('h3').textContent.trim();
+                const price = card.querySelector('span').textContent.trim();
+                
+                addToCart(name, price);
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
