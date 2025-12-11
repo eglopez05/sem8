@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "dist/restaurante/server/server.mjs",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "dist/restaurante/browser/**/*",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "dist/restaurante/server/server.mjs"
+    }
+  ]
+}

@@ -4,75 +4,72 @@
   "cli": {
     "packageManager": "npm"
   },
-  "newProjectRoot": "projects",
   "projects": {
     "restaurante": {
       "projectType": "application",
-      "schematics": {},
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular/build:application",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "outputPath": "dist/restaurante/browser",
+            "index": "src/index.html",
             "browser": "src/main.ts",
+            "server": "src/main.server.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
+              "src/favicon.ico",
+              "src/assets"
             ],
             "styles": [
               "src/styles.css"
             ],
-            "server": "src/main.server.ts",
-            "outputMode": "server",
             "ssr": {
               "entry": "src/server.ts"
             }
           },
           "configurations": {
             "production": {
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
-                }
-              ],
               "outputHashing": "all"
             },
             "development": {
               "optimization": false,
-              "extractLicenses": false,
               "sourceMap": true
             }
-          },
-          "defaultConfiguration": "production"
+          }
         },
         "serve": {
-          "builder": "@angular/build:dev-server",
+          "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "restaurante:build:production"
+"buildTarget": "restaurante:build:production"
             },
             "development": {
-              "buildTarget": "restaurante:build:development"
+"buildTarget": "restaurante:build:development"
             }
           },
           "defaultConfiguration": "development"
         },
-        "test": {
-          "builder": "@angular/build:unit-test"
+        "serve-ssr": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/restaurante/server",
+            "main": "src/main.server.ts",
+            "tsConfig": "tsconfig.server.json"
+          }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/restaurante/server",
+            "main": "src/main.server.ts",
+            "tsConfig": "tsconfig.server.json"
+          }
         }
       }
     }
   }
 }
+
